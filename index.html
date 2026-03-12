@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PropGuard System</title>
+  <meta name="description" content="Never Break Your Prop Firm Rules Again." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,204 +12,239 @@
 </head>
 <body>
   <header class="site-header">
-    <div class="brand-wrap">
-      <div class="brand-mark">PG</div>
-      <div>
-        <div class="brand-name">PropGuard System</div>
-        <div class="brand-sub">Funded trader protection platform</div>
-      </div>
+    <div class="container nav-wrap">
+      <a href="#top" class="brand">
+        <img src="logo.jpeg" alt="PropGuard System logo" class="brand-logo" />
+        <div>
+          <div class="brand-title">PropGuard System</div>
+          <div class="brand-subtitle">Protection for funded traders</div>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#calculator">Risk Engine</a>
+      </nav>
+      <a href="#trial" class="btn btn-primary btn-small">Start Free Trial</a>
     </div>
-    <nav class="site-nav">
-      <a href="#features">Features</a>
-      <a href="#dashboard">Dashboard</a>
-      <a href="#calculator">Risk Engine</a>
-      <a href="#cta" class="nav-cta">Start Free Trial</a>
-    </nav>
   </header>
 
-  <main>
+  <main id="top">
     <section class="hero">
-      <div class="hero-copy">
-        <span class="pill">Built for funded traders</span>
-        <h1>Never Break Your Prop Firm Rules Again</h1>
-        <p>
-          PropGuard System helps day traders and scalpers monitor risk, stay disciplined,
-          and protect funded accounts with real-time status, pre-trade risk checks,
-          consistency scoring, and survival tracking.
-        </p>
-        <div class="hero-actions">
-          <a href="#cta" class="btn btn-primary">Start Your Free 5-Day Trial</a>
-          <a href="#dashboard" class="btn btn-secondary">See Dashboard</a>
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">Built for prop firm traders</span>
+          <h1>Never Break Your Prop Firm Rules Again</h1>
+          <p class="hero-copy">PropGuard System helps day traders and scalpers protect funded accounts, monitor risk in real time, and stay consistent for years.</p>
+          <div class="hero-actions">
+            <a href="#trial" class="btn btn-primary">Start Your Free 5-Day Trial</a>
+            <a href="#dashboard" class="btn btn-secondary">See the Dashboard</a>
+          </div>
+          <div class="hero-points">
+            <span>Real-time protection</span>
+            <span>Consistency tracking</span>
+            <span>Fast pre-trade validation</span>
+          </div>
         </div>
-        <div class="hero-stats">
-          <div class="stat-card"><strong>SAFE / CAUTION / STOP</strong><span>Instant traffic-light status</span></div>
-          <div class="stat-card"><strong>Consistency Score</strong><span>Main discipline metric</span></div>
-          <div class="stat-card"><strong>Survival Score</strong><span>Account longevity indicator</span></div>
+        <div class="hero-card glass">
+          <div class="status-panel">
+            <div>
+              <div class="mini-label">TRADER STATUS</div>
+              <div id="heroStatus" class="status-display safe">SAFE</div>
+            </div>
+            <div class="traffic-lights">
+              <span class="light active green"></span>
+              <span class="light yellow"></span>
+              <span class="light red"></span>
+            </div>
+          </div>
+          <div class="stat-grid top-stats">
+            <div class="stat-card">
+              <span>Daily Loss Used</span>
+              <strong id="heroDailyLoss">12%</strong>
+            </div>
+            <div class="stat-card">
+              <span>Drawdown Remaining</span>
+              <strong id="heroDrawdown">$2,750</strong>
+            </div>
+            <div class="stat-card">
+              <span>Trades Today</span>
+              <strong id="heroTrades">3</strong>
+            </div>
+            <div class="stat-card">
+              <span>Consistency Score</span>
+              <strong id="heroConsistency">84</strong>
+            </div>
+          </div>
+          <div class="survival-box">
+            <span>PropFirm Survival Score</span>
+            <strong id="heroSurvival">82%</strong>
+          </div>
         </div>
       </div>
-      <div class="hero-panel">
-        <div class="dashboard-card compact">
+    </section>
+
+    <section id="features" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Core features</span>
+          <h2>A professional control system for funded accounts</h2>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card glass">
+            <h3>Risk Protection</h3>
+            <p>Monitor daily loss, drawdown pressure, and risk exposure before your next trade damages the account.</p>
+          </article>
+          <article class="feature-card glass">
+            <h3>Traffic Light Status</h3>
+            <p>See instantly whether you are safe, should be cautious, or need to stop trading for the day.</p>
+          </article>
+          <article class="feature-card glass">
+            <h3>Consistency Tracking</h3>
+            <p>Measure discipline over time with a clean score designed to show behavior, not hype.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="dashboard" class="section section-alt">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Live dashboard</span>
+          <h2>See your account state in one glance</h2>
+        </div>
+        <div class="dashboard-shell glass">
           <div class="dashboard-top">
             <div>
-              <div class="section-label">TRADER STATUS</div>
-              <div class="status-row"><span class="status-dot safe"></span><span class="status-text">SAFE</span></div>
+              <div class="mini-label">Account</div>
+              <h3>Apex 50K</h3>
             </div>
-            <div class="status-badge">Live</div>
+            <div class="status-pill" id="statusPill">SAFE</div>
           </div>
-          <div class="mini-grid">
-            <div><span>Daily Loss Used</span><strong id="heroLoss">18%</strong></div>
-            <div><span>Drawdown Remaining</span><strong>$2,450</strong></div>
-            <div><span>Trades Today</span><strong id="heroTrades">3</strong></div>
-            <div><span>Consistency Score</span><strong id="heroConsistency">86</strong></div>
+
+          <div class="stat-grid dashboard-stats">
+            <div class="stat-card"><span>Daily Loss Used</span><strong id="dailyLossDisplay">12%</strong></div>
+            <div class="stat-card"><span>Drawdown Remaining</span><strong id="drawdownDisplay">$2,750</strong></div>
+            <div class="stat-card"><span>Trades Today</span><strong id="tradesDisplay">3</strong></div>
+            <div class="stat-card"><span>Consistency Score</span><strong id="consistencyDisplay">84</strong></div>
+          </div>
+
+          <div class="dashboard-panels">
+            <div class="panel panel-large">
+              <div class="panel-header">
+                <h4>Alerts & Recommendations</h4>
+              </div>
+              <div id="alertBox" class="alert-box alert-safe">
+                <strong id="alertTitle">Low risk state</strong>
+                <p id="alertCopy">You are trading within your current risk plan. Stay selective.</p>
+              </div>
+              <div class="quick-log">
+                <h5>Quick Trade Log</h5>
+                <div class="quick-buttons">
+                  <button class="log-btn win" data-result="win">WIN</button>
+                  <button class="log-btn loss" data-result="loss">LOSS</button>
+                  <button class="log-btn be" data-result="be">BREAK EVEN</button>
+                </div>
+                <p id="quickLogMessage" class="micro-copy">Tap a result to update trades today and behavior state.</p>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="panel-header">
+                <h4>Scores</h4>
+              </div>
+              <div class="score-list">
+                <div class="score-row">
+                  <span>Consistency Score</span>
+                  <strong id="scoreConsistency">84 / 100</strong>
+                </div>
+                <div class="progress"><span id="consistencyBar" style="width:84%"></span></div>
+                <div class="score-row">
+                  <span>PropFirm Survival Score</span>
+                  <strong id="scoreSurvival">82%</strong>
+                </div>
+                <div class="progress"><span id="survivalBar" style="width:82%"></span></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="features" class="features">
-      <div class="section-head">
-        <span class="eyebrow">Core features</span>
-        <h2>Focused on protection, consistency, and survival</h2>
-      </div>
-      <div class="feature-grid">
-        <article class="feature-card">
-          <h3>Pre-Trade Risk Engine</h3>
-          <p>Check position size, dollar risk, reward ratio, and prop-rule impact before entering a trade.</p>
-        </article>
-        <article class="feature-card">
-          <h3>Traffic-Light Status</h3>
-          <p>See whether you are safe, in caution, or should stop trading immediately.</p>
-        </article>
-        <article class="feature-card">
-          <h3>Ultra-Fast Logging</h3>
-          <p>Log WIN, LOSS, or BREAK EVEN in one tap so scalpers can stay fast.</p>
-        </article>
-        <article class="feature-card">
-          <h3>Consistency Score</h3>
-          <p>Measure discipline over time using behavior, not just profit and loss.</p>
-        </article>
-        <article class="feature-card">
-          <h3>Survival Score</h3>
-          <p>Track the likelihood of keeping your funded account based on your current habits.</p>
-        </article>
-        <article class="feature-card">
-          <h3>Prop Firm Rules</h3>
-          <p>Configure custom rules now, and expand later into specific firm templates.</p>
-        </article>
-      </div>
-    </section>
-
-    <section id="dashboard" class="dashboard-section">
-      <div class="section-head">
-        <span class="eyebrow">Prototype dashboard</span>
-        <h2>Your main command center</h2>
-      </div>
-      <div class="dashboard-layout">
-        <div class="dashboard-card focus-card">
-          <div class="section-label">TRADER STATUS</div>
-          <div class="status-row large"><span id="statusDot" class="status-dot safe"></span><span id="statusText" class="status-text">SAFE</span></div>
-          <p id="statusMessage" class="status-message">You are trading within your risk plan.</p>
+    <section id="calculator" class="section">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow">Pre-Trade Risk Engine</span>
+          <h2>Validate a trade before you take it</h2>
         </div>
+        <div class="calculator-layout">
+          <form id="riskForm" class="glass calculator-card">
+            <div class="form-grid">
+              <label>
+                <span>Account Size ($)</span>
+                <input type="number" id="accountSize" value="50000" required />
+              </label>
+              <label>
+                <span>Daily Loss Limit ($)</span>
+                <input type="number" id="dailyLimit" value="1250" required />
+              </label>
+              <label>
+                <span>Risk Per Trade (%)</span>
+                <input type="number" id="riskPercent" value="1" step="0.1" required />
+              </label>
+              <label>
+                <span>Entry Price</span>
+                <input type="number" id="entryPrice" value="3942.5" step="0.01" required />
+              </label>
+              <label>
+                <span>Stop Loss</span>
+                <input type="number" id="stopLoss" value="3934.5" step="0.01" required />
+              </label>
+              <label>
+                <span>Take Profit</span>
+                <input type="number" id="takeProfit" value="3960" step="0.01" required />
+              </label>
+              <label>
+                <span>Point Value ($)</span>
+                <input type="number" id="pointValue" value="5" step="0.01" required />
+              </label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Calculate Risk</button>
+          </form>
 
-        <div class="dashboard-card">
-          <div class="section-label">SCORES</div>
-          <div class="score-block">
-            <span>Consistency Score</span>
-            <strong id="consistencyScore">86</strong>
+          <div class="glass calculator-results">
+            <h3>Trade Output</h3>
+            <div class="result-grid">
+              <div class="result-card"><span>Risk Per Trade</span><strong id="riskOutput">$500.00</strong></div>
+              <div class="result-card"><span>Suggested Contracts</span><strong id="contractsOutput">12</strong></div>
+              <div class="result-card"><span>Risk / Reward</span><strong id="rrOutput">1 : 2.19</strong></div>
+              <div class="result-card"><span>Daily Loss Impact</span><strong id="impactOutput">40%</strong></div>
+            </div>
+            <div id="validationBox" class="validation safe-box">
+              <strong id="validationTitle">VALID TRADE</strong>
+              <p id="validationCopy">This setup is within your current daily loss parameters.</p>
+            </div>
           </div>
-          <div class="score-block">
-            <span>PropFirm Survival Score</span>
-            <strong id="survivalScore">82%</strong>
-          </div>
-        </div>
-
-        <div class="dashboard-card metrics-card">
-          <div class="metric"><span>Daily Loss Used</span><strong id="dailyLossUsed">18%</strong></div>
-          <div class="metric"><span>Drawdown Remaining</span><strong id="drawdownRemaining">$2,450</strong></div>
-          <div class="metric"><span>Trades Today</span><strong id="tradesToday">3</strong></div>
-          <div class="metric"><span>Loss Streak</span><strong id="lossStreak">1</strong></div>
         </div>
       </div>
     </section>
 
-    <section id="calculator" class="calculator-section">
-      <div class="section-head">
-        <span class="eyebrow">Risk engine</span>
-        <h2>Test the first interactive module</h2>
-      </div>
-
-      <div class="calculator-layout">
-        <form id="riskForm" class="dashboard-card calculator-card">
-          <div class="form-grid">
-            <label>
-              Account Size
-              <input type="number" id="accountSize" value="50000" min="1" step="1" />
-            </label>
-            <label>
-              Daily Loss Limit ($)
-              <input type="number" id="dailyLossLimit" value="1000" min="1" step="1" />
-            </label>
-            <label>
-              Risk Per Trade (%)
-              <input type="number" id="riskPercent" value="1" min="0.1" step="0.1" />
-            </label>
-            <label>
-              Entry Price
-              <input type="number" id="entryPrice" value="19000" step="0.01" />
-            </label>
-            <label>
-              Stop Loss
-              <input type="number" id="stopLoss" value="18980" step="0.01" />
-            </label>
-            <label>
-              Take Profit
-              <input type="number" id="takeProfit" value="19060" step="0.01" />
-            </label>
-          </div>
-          <button type="submit" class="btn btn-primary full">Calculate Risk</button>
-        </form>
-
-        <div class="dashboard-card results-card">
-          <div class="section-label">RESULTS</div>
-          <div class="result-list">
-            <div><span>Risk Per Trade</span><strong id="riskPerTrade">$500.00</strong></div>
-            <div><span>Price Distance to Stop</span><strong id="stopDistance">20.00</strong></div>
-            <div><span>Suggested Position Size</span><strong id="positionSize">25.00 units</strong></div>
-            <div><span>Risk/Reward Ratio</span><strong id="rrRatio">1:3.00</strong></div>
-            <div><span>Daily Loss Impact</span><strong id="lossImpact">50.0%</strong></div>
-          </div>
-          <div id="warningBox" class="warning-box neutral">Trade is currently within your configured rules.</div>
+    <section id="trial" class="section section-alt">
+      <div class="container cta-box glass">
+        <div>
+          <span class="eyebrow">Launch faster</span>
+          <h2>Start your free 5-day trial</h2>
+          <p>PropGuard System is designed to protect your funded account and help you build consistency that lasts.</p>
         </div>
-      </div>
-    </section>
-
-    <section class="logging-section">
-      <div class="section-head">
-        <span class="eyebrow">Trade logging</span>
-        <h2>One-tap logging for scalpers</h2>
-      </div>
-      <div class="logging-wrap dashboard-card">
-        <div class="log-buttons">
-          <button class="log-btn win" data-result="WIN">WIN</button>
-          <button class="log-btn loss" data-result="LOSS">LOSS</button>
-          <button class="log-btn be" data-result="BREAK EVEN">BREAK EVEN</button>
-        </div>
-        <p id="logMessage" class="log-message">No trade logged yet.</p>
-      </div>
-    </section>
-
-    <section id="cta" class="cta-section">
-      <div class="cta-card">
-        <h2>Ready to launch PropGuard on GitHub?</h2>
-        <p>This starter version is ready for GitHub Pages. Push the files, enable Pages, and your first version is live.</p>
-        <a href="https://propguardsystem.com" class="btn btn-primary">Use on propguardsystem.com</a>
+        <a href="#top" class="btn btn-primary">Start Free Trial</a>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <span>© 2026 PropGuard System</span>
-    <span>Built for funded traders</span>
+    <div class="container footer-wrap">
+      <span>© 2026 PropGuard System</span>
+      <span>Never Break Your Prop Firm Rules Again</span>
+    </div>
   </footer>
 
   <script src="app.js"></script>
