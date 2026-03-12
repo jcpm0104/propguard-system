@@ -10,15 +10,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   <style>
-    .hidden{display:none !important;}
-    .auth-section{margin:24px auto 32px;}
-    .auth-panel{max-width:900px;margin:0 auto;}
-    .auth-tabs{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;}
-    .auth-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-    .auth-actions{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:16px;}
-    .auth-status{min-height:20px;margin-top:12px;opacity:.9;}
-    .topbar-actions{display:flex;gap:12px;align-items:center;}
-    @media (max-width: 768px){.auth-row{grid-template-columns:1fr;}}
+    .hidden { display: none !important; }
+    .auth-section { margin: 24px auto 32px; }
+    .auth-panel { max-width: 900px; margin: 0 auto; }
+    .auth-tabs { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    .auth-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .auth-actions { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-top: 16px; }
+    .auth-status { min-height: 20px; margin-top: 12px; opacity: .9; }
+    .topbar-actions { display: flex; gap: 12px; align-items: center; }
+    @media (max-width: 768px) {
+      .auth-row { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -55,15 +57,16 @@
             <span>Behavior detection</span>
           </div>
         </div>
+
         <div class="hero-status panel">
           <div class="mini-label">TRADER STATUS</div>
           <div class="hero-status-value safe">SAFE</div>
-          <div class="hero-status-text">Sign in to unlock your protected dashboard and risk engine.</div>
+          <div class="hero-status-text">See how PropGuard looks before you sign in.</div>
           <div class="hero-status-grid">
-            <div class="metric-card compact"><span>Daily Risk Used</span><strong>0%</strong></div>
-            <div class="metric-card compact"><span>Drawdown Left</span><strong>$0</strong></div>
-            <div class="metric-card compact"><span>Consistency</span><strong>0</strong></div>
-            <div class="metric-card compact"><span>Survival</span><strong>0%</strong></div>
+            <div class="metric-card compact"><span>Daily Risk Used</span><strong>18%</strong></div>
+            <div class="metric-card compact"><span>Drawdown Left</span><strong>$3,250</strong></div>
+            <div class="metric-card compact"><span>Consistency</span><strong>84</strong></div>
+            <div class="metric-card compact"><span>Survival</span><strong>91%</strong></div>
           </div>
         </div>
       </div>
@@ -239,7 +242,12 @@
             <div class="panel-title">Account &amp; rule setup</div>
             <div class="inline-inputs split2">
               <label><span>Prop Firm</span>
-                <select id="propFirm"><option>Apex</option><option>Topstep</option><option>FTMO</option><option>Custom</option></select>
+                <select id="propFirm">
+                  <option>Apex</option>
+                  <option>Topstep</option>
+                  <option>FTMO</option>
+                  <option>Custom</option>
+                </select>
               </label>
               <label><span>Instrument</span>
                 <select id="instrument">
@@ -268,7 +276,10 @@
           </form>
 
           <form id="riskForm" class="panel-inner">
-            <div class="panel-title row-between"><span>Trade calculator</span><label class="quick-check"><input type="checkbox" id="quickMode"> <span>Quick Trade Mode</span></label></div>
+            <div class="panel-title row-between">
+              <span>Trade calculator</span>
+              <label class="quick-check"><input type="checkbox" id="quickMode"> <span>Quick Trade Mode</span></label>
+            </div>
             <div class="inline-inputs split2">
               <label><span>Entry Price</span><input id="entryInput" type="number" value="19000" step="0.01"></label>
               <label><span>Stop Loss</span><input id="stopInput" type="number" value="18980" step="0.01"></label>
@@ -365,6 +376,7 @@
   </div>
 
   <script src="app.js"></script>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
@@ -375,6 +387,18 @@
       signInWithEmailAndPassword,
       signOut
     } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      collection,
+      getDocs,
+      query,
+      orderBy,
+      limit,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBwJGXfiE-44d8AWA083X4E8lUD5-BeOfo",
@@ -389,6 +413,7 @@
     const app = initializeApp(firebaseConfig);
     getAnalytics(app);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
     const publicApp = document.getElementById("publicApp");
     const privateApp = document.getElementById("privateApp");
@@ -403,48 +428,163 @@
     const authMessage = document.getElementById("authMessage");
     const logoutBtn = document.getElementById("logoutBtn");
 
-    showSignIn.addEventListener("click", () => {
+    function defaultUserProfile(user) {
+      return {
+        uid: user.uid,
+        email: user.email || "",
+        propFirm: "Apex",
+        instrument: "MNQ",
+        startingBalance: 50000,
+        currentBalance: 50000,
+        highestBalance: 50000,
+        dailyLossLimit: 2000,
+        trailingDrawdown: 2500,
+        maxRiskPercent: 1,
+        tradesToday: 0,
+        lossesInRow: 0,
+        tradeResults: [],
+        balanceHistory: [50000],
+        sessions: {
+          London: { trades: 0, pnl: 0 },
+          "New York": { trades: 0, pnl: 0 },
+          Asia: { trades: 0, pnl: 0 }
+        },
+        lastCalculation: {
+          riskPerTrade: 0,
+          suggestedContracts: 0,
+          dailyImpact: 0,
+          drawdownImpact: 0
+        },
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      };
+    }
+
+    async function ensureUserProfile(user) {
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+
+      if (!snap.exists()) {
+        await setDoc(ref, defaultUserProfile(user));
+        const createdSnap = await getDoc(ref);
+        return createdSnap.data();
+      }
+
+      return snap.data();
+    }
+
+    async function loadRecentTrades(uid) {
+      const tradesRef = collection(db, "users", uid, "trades");
+      const qRef = query(tradesRef, orderBy("createdAt", "desc"), limit(20));
+      const snap = await getDocs(qRef);
+
+      const trades = [];
+      snap.forEach((docSnap) => {
+        trades.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      return trades.reverse();
+    }
+
+    window.propguardCloud = {
+      db,
+      auth,
+      async saveProfile(partial) {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        await setDoc(
+          doc(db, "users", user.uid),
+          {
+            ...partial,
+            updatedAt: serverTimestamp()
+          },
+          { merge: true }
+        );
+      },
+
+      async reloadUserData() {
+        const user = auth.currentUser;
+        if (!user) return null;
+
+        const profileSnap = await getDoc(doc(db, "users", user.uid));
+        const trades = await loadRecentTrades(user.uid);
+
+        return {
+          profile: profileSnap.exists() ? profileSnap.data() : null,
+          trades
+        };
+      }
+    };
+
+    showSignIn?.addEventListener("click", () => {
       signInForm.classList.remove("hidden");
       signUpForm.classList.add("hidden");
       authMessage.textContent = "";
     });
 
-    showSignUp.addEventListener("click", () => {
+    showSignUp?.addEventListener("click", () => {
       signUpForm.classList.remove("hidden");
       signInForm.classList.add("hidden");
       authMessage.textContent = "";
     });
 
-    signUpForm.addEventListener("submit", async (e) => {
+    signUpForm?.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       try {
-        await createUserWithEmailAndPassword(auth, signUpEmail.value.trim(), signUpPassword.value.trim());
+        const cred = await createUserWithEmailAndPassword(
+          auth,
+          signUpEmail.value.trim(),
+          signUpPassword.value.trim()
+        );
+
+        await ensureUserProfile(cred.user);
         authMessage.textContent = "Account created successfully.";
       } catch (error) {
         authMessage.textContent = error.message;
       }
     });
 
-    signInForm.addEventListener("submit", async (e) => {
+    signInForm?.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       try {
-        await signInWithEmailAndPassword(auth, signInEmail.value.trim(), signInPassword.value.trim());
+        await signInWithEmailAndPassword(
+          auth,
+          signInEmail.value.trim(),
+          signInPassword.value.trim()
+        );
+
         authMessage.textContent = "Signed in successfully.";
       } catch (error) {
         authMessage.textContent = error.message;
       }
     });
 
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", async () => {
-        await signOut(auth);
-      });
-    }
+    logoutBtn?.addEventListener("click", async () => {
+      await signOut(auth);
+    });
 
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
         publicApp.classList.add("hidden");
         privateApp.classList.remove("hidden");
+
+        try {
+          const profile = await ensureUserProfile(user);
+          const trades = await loadRecentTrades(user.uid);
+
+          if (window.applyCloudState) {
+            window.applyCloudState(profile, trades);
+          }
+
+          if (window.propguardRefreshUI) {
+            setTimeout(() => window.propguardRefreshUI(), 60);
+          }
+        } catch (error) {
+          console.error("Error loading PropGuard profile:", error);
+        }
       } else {
         privateApp.classList.add("hidden");
         publicApp.classList.remove("hidden");
