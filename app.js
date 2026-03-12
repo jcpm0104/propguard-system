@@ -30,7 +30,8 @@ const state = {
     suggestedContracts: 0,
     dailyImpact: 0,
     drawdownImpact: 0
-  }
+  },
+  onboardingDismissed: false
 };
 
 const $ = (id) => document.getElementById(id);
@@ -135,6 +136,11 @@ function clamp(v, min, max) {
   return Math.max(min, Math.min(max, v));
 }
 
+function positiveNumber(value, fallback = 0) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+
 function drawdownLimitLine() {
   return state.highestBalance - state.trailingDrawdown;
 }
@@ -195,7 +201,6 @@ function riskHeatValue(consistency, survival) {
     0,
     100
   );
-
   return Math.round(v);
 }
 
@@ -380,8 +385,7 @@ function renderChart() {
   ctx.beginPath();
   data.forEach((value, i) => {
     const x = padding.left + (i / Math.max(1, data.length - 1)) * innerW;
-    const y =
-      padding.top + (1 - (value - min) / (max - min)) * innerH;
+    const y = padding.top + (1 - (value - min) / (max - min)) * innerH;
 
     if (i === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
@@ -393,13 +397,139 @@ function renderChart() {
 
   const last = data[data.length - 1];
   const x = padding.left + (data.length === 1 ? 0 : innerW);
-  const y =
-    padding.top + (1 - (last - min) / (max - min)) * innerH;
+  const y = padding.top + (1 - (last - min) / (max - min)) * innerH;
 
   ctx.fillStyle = "#23c16b";
   ctx.beginPath();
   ctx.arc(x, y, 4, 0, Math.PI * 2);
   ctx.fill();
+}
+
+function showOnboardingOnce() {
+  if (state.onboardingDismissed) return;
+  if (localStorage.getItem("propguard_onboarding_seen") === "1") return;
+
+  setTimeout(() => {
+    alert(
+      "Welcome to PropGuard\\n\\n1. Configure your account rules\\n2. Calculate risk before each trade\\n3. Log wins, losses, and break-even trades to track consistency"
+    );
+    localStorage.setItem("propguard_onboarding_seen", "1");
+    state.onboardingDismissed = true;
+  }, 500);
+}
+
+function validateAccountInputs() {
+  const startingBalance = positiveNumber(els.startingBalanceInput?.value, 50000);
+  const currentBalance = positiveNumber(els.currentBalanceInput?.value, 50000);
+  const highestBalance = positiveNumber(els.highestBalanceInput?.value, 50000);
+  const dailyLossLimit = positiveNumber(els.dailyLossLimitInput?.value, 2000);
+  const trailingDrawdown = positiveNumber(els.trailingDrawdownInput?.value, 2500);
+  const maxRiskPercent = positiveNumber(els.maxRiskPercentInput?.value, 1);
+
+  if (startingBalance <= 0) {
+    alert("Starting Balance must be greater than 0.");
+    return null;
+  }
+
+  if (currentBalance <= 0) {
+    alert("Current Balance must be greater than 0.");
+    return null;
+  }
+
+  if (highestBalance <= 0) {
+    alert("Highest Balance must be greater than 0.");
+    return null;
+  }
+
+  if (dailyLossLimit <= 0) {
+    alert("Daily Loss Limit must be greater than 0.");
+    return null;
+  }
+
+  if (trailingDrawdown <= 0) {
+    alert("Trailing Drawdown must be greater than 0.");
+    return null;
+  }
+
+  if (maxRiskPercent <= 0 || maxRiskPercent > 10) {
+    alert("Max Risk per Trade must be between 0 and 10.");
+    return null;
+  }
+
+  return {
+    startingBalance,
+    currentBalance,
+    highestBalance,
+    dailyLossLimit,
+    trailingDrawdown,
+    maxRiskPercent
+  };
+}
+
+function validateTradeInputs() {
+  const instrument = els.instrument?.value || state.instrument;
+  const preset = instrumentPresets[instrument] || instrumentPresets.MNQ;
+
+  const entry = positiveNumber(els.entryInput?.value, 0);
+  const stop = positiveNumber(els.stopInput?.value, 0);
+  const tp = positiveNumber(els.takeProfitInput?.value, 0);
+  const manualContracts = positiveNumber(els.manualContractsInput?.value || 0, 0);
+
+  if (entry <= 0 || stop <= 0) {
+    alert("Entry Price and Stop Loss must be greater than 0.");
+    return null;
+  }
+
+  if (entry === stop) {
+    alert("Entry Price and Stop Loss cannot be the same.");
+    return null;
+  }
+
+  const pointDistance = Math.abs(entry - stop);
+  const ticks = preset.tickSize > 0 ? pointDistance / preset.tickSize : 0;
+
+  if (pointDistance <= 0) {
+    alert("Stop distance must be greater than 0.");
+    return null;
+  }
+
+  if (ticks < 1) {
+    alert("Stop distance is too small for this instrument.");
+    return null;
+  }
+
+  if (ticks > 2000) {
+    alert("Stop distance is too large. Please review the trade inputs.");
+    return null;
+  }
+
+  if (!els.quickMode?.checked && tp <= 0) {
+    alert("Take Profit must be greater than 0.");
+    return null;
+  }
+
+  if (manualContracts < 0) {
+    alert("Manual Contracts cannot be negative.");
+    return null;
+  }
+
+  return { instrument, entry, stop, tp, manualContracts };
+}
+
+function validateTradeLogInput() {
+  const pnl = positiveNumber(els.tradePnl?.value, 0);
+
+  if (pnl < 0) {
+    alert("Trade P&L cannot be negative. Use the WIN / LOSS buttons to choose direction.");
+    return null;
+  }
+
+  if (pnl === 0) {
+    alert("Trade P&L must be greater than 0 for WIN or LOSS.");
+    return null;
+  }
+
+  return pnl;
 }
 
 function render() {
@@ -454,14 +584,26 @@ function render() {
   renderChart();
 }
 
-function calculateTrade() {
-  const instrument = els.instrument?.value || state.instrument;
-  const preset = instrumentPresets[instrument] || instrumentPresets.MNQ;
+function calculateTrade(showAlerts = true) {
+  const validated = validateTradeInputs();
 
-  const entry = parseFloat(els.entryInput?.value || "0");
-  const stop = parseFloat(els.stopInput?.value || "0");
-  const tp = parseFloat(els.takeProfitInput?.value || "0");
-  const manualContracts = parseFloat(els.manualContractsInput?.value || "0");
+  if (!validated) {
+    if (!showAlerts) return false;
+
+    setText(els.suggestedSize, "0 contracts");
+    setText(els.riskPerTradeOut, "$0");
+    setText(els.rrOut, els.quickMode?.checked ? "Quick mode" : "1 : 0");
+    setText(els.dailyImpactOut, "0%");
+    setText(els.pointsOut, "0");
+    setText(els.ticksOut, "0");
+    setText(els.riskPerContractOut, "$0");
+    setText(els.riskImpactDailyOut, "0%");
+    setText(els.riskImpactDrawdownOut, "0%");
+    return false;
+  }
+
+  const { instrument, entry, stop, tp, manualContracts } = validated;
+  const preset = instrumentPresets[instrument] || instrumentPresets.MNQ;
 
   const pointDistance = Math.abs(entry - stop);
   const ticks = preset.tickSize > 0 ? pointDistance / preset.tickSize : 0;
@@ -517,6 +659,7 @@ function calculateTrade() {
   setText(els.riskImpactDrawdownOut, `${drawdownImpact.toFixed(1)}%`);
 
   render();
+  return true;
 }
 
 function rebuildFromTrades(trades = []) {
@@ -587,6 +730,11 @@ async function saveProfileToCloud() {
 }
 
 async function applyTrade(result) {
+  if (result === "win" || result === "loss") {
+    const validPnl = validateTradeLogInput();
+    if (validPnl === null) return;
+  }
+
   const pnlBase = Math.abs(parseFloat(els.tradePnl?.value || "0"));
   const session = els.tradeSession?.value || "New York";
 
@@ -653,14 +801,17 @@ if (els.settingsForm) {
   els.settingsForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    const validated = validateAccountInputs();
+    if (!validated) return;
+
     state.propFirm = els.propFirm?.value || "Apex";
     state.instrument = els.instrument?.value || "MNQ";
-    state.startingBalance = parseFloat(els.startingBalanceInput?.value || "50000");
-    state.currentBalance = parseFloat(els.currentBalanceInput?.value || "50000");
-    state.highestBalance = parseFloat(els.highestBalanceInput?.value || "50000");
-    state.dailyLossLimit = parseFloat(els.dailyLossLimitInput?.value || "2000");
-    state.trailingDrawdown = parseFloat(els.trailingDrawdownInput?.value || "2500");
-    state.maxRiskPercent = parseFloat(els.maxRiskPercentInput?.value || "1");
+    state.startingBalance = validated.startingBalance;
+    state.currentBalance = validated.currentBalance;
+    state.highestBalance = validated.highestBalance;
+    state.dailyLossLimit = validated.dailyLossLimit;
+    state.trailingDrawdown = validated.trailingDrawdown;
+    state.maxRiskPercent = validated.maxRiskPercent;
 
     if (!state.balanceHistory.length) {
       state.balanceHistory = [state.currentBalance];
@@ -669,7 +820,7 @@ if (els.settingsForm) {
     }
 
     await saveProfileToCloud();
-    calculateTrade();
+    calculateTrade(false);
     render();
   });
 }
@@ -679,14 +830,14 @@ if (els.quickMode) {
     if (els.tpRow) {
       els.tpRow.style.display = els.quickMode.checked ? "none" : "grid";
     }
-    calculateTrade();
+    calculateTrade(false);
   });
 }
 
 if (els.riskForm) {
   els.riskForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    calculateTrade();
+    calculateTrade(true);
   });
 }
 
@@ -748,8 +899,9 @@ window.applyCloudState = function applyCloudState(profile, trades = []) {
     els.tpRow.style.display = els.quickMode?.checked ? "none" : "grid";
   }
 
-  calculateTrade();
+  calculateTrade(false);
   render();
+  showOnboardingOnce();
 };
 
 window.propguardRefreshUI = function propguardRefreshUI() {
@@ -760,5 +912,5 @@ if (els.tpRow) {
   els.tpRow.style.display = "grid";
 }
 
-calculateTrade();
+calculateTrade(false);
 render();
