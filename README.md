@@ -1,21 +1,14 @@
-# PropGuard System - PRO Version
+# PropGuard System v2
 
-This is a static GitHub Pages-ready version of PropGuard System.
+Updated static prototype for GitHub Pages.
 
-## Files included
-- `index.html`
-- `styles.css`
-- `app.js`
-- `logo.jpeg`
+## Files to upload
+- index.html
+- styles.css
+- app.js
+- logo.jpeg
 
-## Upload to GitHub
-1. Open your GitHub repository.
-2. Upload all files from this folder to the root of the repo.
-3. In **Settings > Pages**, choose:
-   - Source: `Deploy from branch`
-   - Branch: `main`
-   - Folder: `/root`
-4. Save.
+## GitHub Pages
+Settings → Pages → Deploy from branch → main → /root
 
-## Custom domain
-If you want to connect `propguardsystem.com`, add your domain inside GitHub Pages settings and then update your DNS records where you bought the domain.
+This is still a prototype build for testing the platform logic and layout before login, free trial, and payments are added.
