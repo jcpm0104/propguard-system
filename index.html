@@ -12,14 +12,193 @@
   <style>
     .hidden { display: none !important; }
     .auth-section { margin: 24px auto 32px; }
-    .auth-panel { max-width: 900px; margin: 0 auto; }
+    .auth-panel { max-width: 980px; margin: 0 auto; }
     .auth-tabs { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
     .auth-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .auth-actions { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-top: 16px; }
     .auth-status { min-height: 20px; margin-top: 12px; opacity: .9; }
     .topbar-actions { display: flex; gap: 12px; align-items: center; }
+
+    .landing-section {
+      margin-top: 18px;
+      padding: 22px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(17,24,39,.82), rgba(12,18,31,.9));
+      border: 1px solid rgba(255,255,255,.06);
+      box-shadow: 0 20px 50px rgba(0,0,0,.25);
+    }
+
+    .landing-title {
+      margin: 0 0 8px;
+      font-size: 1.6rem;
+      letter-spacing: -.03em;
+    }
+
+    .landing-copy {
+      margin: 0;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .how-grid,
+    .why-grid,
+    .demo-grid {
+      display: grid;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .how-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .why-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .demo-grid { grid-template-columns: 1.2fr .8fr; }
+
+    .landing-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .landing-card h3,
+    .landing-card h4 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .landing-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .step-number {
+      display: inline-flex;
+      width: 30px;
+      height: 30px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(30,107,255,0.16);
+      color: #b8ceff;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .preview-shell {
+      display: grid;
+      gap: 14px;
+    }
+
+    .preview-panel {
+      background: #0c1422;
+      border: 1px solid rgba(255,255,255,.05);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .preview-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .preview-head strong {
+      font-size: 1rem;
+    }
+
+    .preview-safe {
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .preview-cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+    }
+
+    .preview-metric {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .preview-metric span {
+      display: block;
+      color: var(--muted);
+      font-size: .82rem;
+      margin-bottom: 8px;
+    }
+
+    .preview-metric strong {
+      font-size: 1.2rem;
+    }
+
+    .preview-trades {
+      display: grid;
+      gap: 10px;
+    }
+
+    .preview-trade {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .preview-trade small {
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .preview-win { color: #84efb1; font-weight: 800; }
+    .preview-loss { color: #ff9c9c; font-weight: 800; }
+    .preview-flat { color: #ffd08a; font-weight: 800; }
+
+    .mini-heat {
+      margin-top: 14px;
+    }
+
+    .mini-heat-bar {
+      background: #09111d;
+      border: 1px solid rgba(255,255,255,.06);
+      border-radius: 999px;
+      height: 12px;
+      overflow: hidden;
+    }
+
+    .mini-heat-bar span {
+      display: block;
+      width: 24%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--yellow), var(--red));
+    }
+
+    .landing-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    @media (max-width: 980px) {
+      .how-grid,
+      .why-grid,
+      .demo-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 768px) {
       .auth-row { grid-template-columns: 1fr; }
+      .preview-cards { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -36,7 +215,8 @@
         </div>
         <div class="nav-links">
           <a href="#access">Access</a>
-          <a href="#features">Features</a>
+          <a href="#how-it-works">How it Works</a>
+          <a href="#feature-preview">Preview</a>
         </div>
       </div>
     </div>
@@ -44,24 +224,26 @@
     <header class="hero">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <span class="eyebrow">Built for prop firm day traders &amp; scalpers</span>
-          <h1>Never Break Your Prop Firm Rules Again</h1>
-          <p>Professional real-time protection for funded traders. Monitor risk, drawdown, behavior, and consistency before one bad decision costs the account.</p>
+          <span class="eyebrow">Built for prop firm traders &amp; futures scalpers</span>
+          <h1>Protect the Account.<br />Trade With Structure.</h1>
+          <p>
+            PropGuard helps funded traders control risk, track behavior, protect drawdown, and stay within prop firm rules before one bad decision destroys the account.
+          </p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#access">Get Started</a>
-            <a class="btn btn-secondary" href="#features">See Features</a>
+            <a class="btn btn-secondary" href="#feature-preview">See Live Preview</a>
           </div>
-          <div class="hero-badges" id="features">
-            <span>Real-time updates</span>
-            <span>Quick Trade Mode</span>
-            <span>Behavior detection</span>
+          <div class="hero-badges">
+            <span>Real-time risk engine</span>
+            <span>Behavior monitoring</span>
+            <span>Session tracking</span>
           </div>
         </div>
 
         <div class="hero-status panel">
           <div class="mini-label">TRADER STATUS</div>
           <div class="hero-status-value safe">SAFE</div>
-          <div class="hero-status-text">See how PropGuard looks before you sign in.</div>
+          <div class="hero-status-text">Professional prop protection before you ever place the trade.</div>
           <div class="hero-status-grid">
             <div class="metric-card compact"><span>Daily Risk Used</span><strong>18%</strong></div>
             <div class="metric-card compact"><span>Drawdown Left</span><strong>$3,250</strong></div>
@@ -71,6 +253,160 @@
         </div>
       </div>
     </header>
+
+    <section id="feature-preview" class="container landing-section">
+      <h2 class="landing-title">Platform Preview</h2>
+      <p class="landing-copy">
+        This is how PropGuard helps a funded trader stay alive: position sizing before execution, rule impact before the trade, and behavioral feedback after the trade.
+      </p>
+
+      <div class="demo-grid">
+        <div class="landing-card">
+          <h3>Protected Dashboard Example</h3>
+          <div class="preview-shell">
+            <div class="preview-panel">
+              <div class="preview-head">
+                <strong>Risk State</strong>
+                <span class="preview-safe">SAFE</span>
+              </div>
+              <div class="preview-cards">
+                <div class="preview-metric">
+                  <span>Daily Risk Used</span>
+                  <strong>18%</strong>
+                </div>
+                <div class="preview-metric">
+                  <span>Drawdown Remaining</span>
+                  <strong>$3,250</strong>
+                </div>
+                <div class="preview-metric">
+                  <span>Consistency Score</span>
+                  <strong>84 / 100</strong>
+                </div>
+                <div class="preview-metric">
+                  <span>Survival Score</span>
+                  <strong>91%</strong>
+                </div>
+              </div>
+              <div class="mini-heat">
+                <div class="mini-heat-bar"><span></span></div>
+              </div>
+            </div>
+
+            <div class="preview-panel">
+              <div class="preview-head">
+                <strong>Trade Flow Example</strong>
+                <span>New York</span>
+              </div>
+              <div class="preview-trades">
+                <div class="preview-trade">
+                  <div>
+                    <strong>Trade 1</strong>
+                    <small>MNQ / New York</small>
+                  </div>
+                  <span class="preview-win">+$240</span>
+                </div>
+                <div class="preview-trade">
+                  <div>
+                    <strong>Trade 2</strong>
+                    <small>MNQ / New York</small>
+                  </div>
+                  <span class="preview-loss">-$120</span>
+                </div>
+                <div class="preview-trade">
+                  <div>
+                    <strong>Trade 3</strong>
+                    <small>MNQ / New York</small>
+                  </div>
+                  <span class="preview-flat">$0</span>
+                </div>
+              </div>
+              <p class="landing-note">Log trades, measure risk, and monitor behavior without leaving your workflow.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="landing-card">
+          <h3>What the trader sees instantly</h3>
+          <div class="preview-trades">
+            <div class="preview-trade">
+              <div>
+                <strong>Suggested Size</strong>
+                <small>Based on account size and stop distance</small>
+              </div>
+              <span class="preview-safe">12 contracts</span>
+            </div>
+            <div class="preview-trade">
+              <div>
+                <strong>Risk Per Trade</strong>
+                <small>Before execution</small>
+              </div>
+              <span>$480</span>
+            </div>
+            <div class="preview-trade">
+              <div>
+                <strong>Rule Guard</strong>
+                <small>Prop rule safety check</small>
+              </div>
+              <span class="preview-safe">SAFE</span>
+            </div>
+            <div class="preview-trade">
+              <div>
+                <strong>Behavior Warning</strong>
+                <small>Detects pressure, overtrading, revenge risk</small>
+              </div>
+              <span>Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="container landing-section">
+      <h2 class="landing-title">How PropGuard Works</h2>
+      <p class="landing-copy">
+        The system is designed for funded traders who need structure before and after each trade.
+      </p>
+
+      <div class="how-grid">
+        <div class="landing-card">
+          <div class="step-number">1</div>
+          <h4>Configure your account rules</h4>
+          <p>Set your prop firm, drawdown limits, daily loss limit, starting balance, and max risk per trade.</p>
+        </div>
+        <div class="landing-card">
+          <div class="step-number">2</div>
+          <h4>Calculate risk before execution</h4>
+          <p>PropGuard tells you size, risk per contract, daily impact, drawdown impact, and whether the trade is safe.</p>
+        </div>
+        <div class="landing-card">
+          <div class="step-number">3</div>
+          <h4>Track behavior after each trade</h4>
+          <p>Log wins, losses, or break-even trades and instantly update consistency, survival, session tracking, and equity curve.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container landing-section">
+      <h2 class="landing-title">Why PropGuard Is Different</h2>
+      <p class="landing-copy">
+        Most tools focus on charts. PropGuard focuses on the trader’s operating discipline.
+      </p>
+
+      <div class="why-grid">
+        <div class="landing-card">
+          <h4>Built for prop firm survival</h4>
+          <p>Designed around drawdown, daily loss limits, and trader mistakes that cause account failure.</p>
+        </div>
+        <div class="landing-card">
+          <h4>Made for scalpers</h4>
+          <p>Fast enough to support short-term execution without forcing a heavy workflow before every trade.</p>
+        </div>
+        <div class="landing-card">
+          <h4>Behavior + risk together</h4>
+          <p>Position sizing, rule protection, session analytics, and behavioral pressure all in one system.</p>
+        </div>
+      </div>
+    </section>
 
     <section id="access" class="container auth-section">
       <div class="panel auth-panel">
@@ -501,6 +837,18 @@
           },
           { merge: true }
         );
+      },
+
+      async saveTrade(trade) {
+        const user = auth.currentUser;
+        if (!user) return;
+
+        const { addDoc } = await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js");
+
+        await addDoc(collection(db, "users", user.uid, "trades"), {
+          ...trade,
+          createdAt: serverTimestamp()
+        });
       },
 
       async reloadUserData() {
