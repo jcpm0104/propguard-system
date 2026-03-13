@@ -113,7 +113,8 @@ const els = {
   manualContractsInput: $("manualContractsInput"),
 
   tradePnl: $("tradePnl"),
-  tradeSession: $("tradeSession")
+  tradeSession: $("tradeSession"),
+  clearLogBtn: $("clearLogBtn")
 };
 
 function setText(el, value) {
@@ -176,7 +177,7 @@ function computeConsistency() {
     score -= 10;
   }
 
-  return clamp(Math.round(score), 0, 100);
+  return clamp(Math.round(score), 25, 100);
 }
 
 function computeSurvival(consistency) {
@@ -190,7 +191,7 @@ function computeSurvival(consistency) {
   }
 
   score -= state.lossesInRow * 3;
-  return clamp(Math.round(score), 0, 100);
+  return clamp(Math.round(score), 15, 100);
 }
 
 function riskHeatValue(consistency, survival) {
@@ -674,7 +675,7 @@ function rebuildFromTrades(trades = []) {
   };
 
   let runningBalance = state.startingBalance;
-  let highest = state.startingBalance;
+  let highest = state.highestBalance || state.startingBalance;
   let lossesInRow = 0;
 
   trades.forEach((trade) => {
@@ -708,76 +709,6 @@ function rebuildFromTrades(trades = []) {
   }
 }
 
-
-
-function resetStateToPristine() {
-  const baseBalance = positiveNumber(state.startingBalance, 50000);
-
-  state.currentBalance = baseBalance;
-  state.highestBalance = baseBalance;
-  state.tradesToday = 0;
-  state.lossesInRow = 0;
-  state.tradeResults = [];
-  state.balanceHistory = [baseBalance];
-  state.sessions = {
-    London: { trades: 0, pnl: 0 },
-    "New York": { trades: 0, pnl: 0 },
-    Asia: { trades: 0, pnl: 0 }
-  };
-  state.lastCalculation = {
-    riskPerTrade: 0,
-    suggestedContracts: 0,
-    dailyImpact: 0,
-    drawdownImpact: 0
-  };
-
-  if (els.currentBalanceInput) els.currentBalanceInput.value = baseBalance.toFixed(0);
-  if (els.highestBalanceInput) els.highestBalanceInput.value = baseBalance.toFixed(0);
-  if (els.tradePnl) els.tradePnl.value = "";
-
-  setText(els.suggestedSize, "0 contracts");
-  setText(els.riskPerTradeOut, "$0");
-  setText(els.rrOut, els.quickMode?.checked ? "Quick mode" : "1 : 0");
-  setText(els.dailyImpactOut, "0%");
-  setText(els.pointsOut, "0");
-  setText(els.ticksOut, "0");
-  setText(els.riskPerContractOut, "$0");
-  setText(els.riskImpactDailyOut, "0%");
-  setText(els.riskImpactDrawdownOut, "0%");
-  setText(els.tradeMessage, "Trading log cleared. Account metrics reset to a clean starting state.");
-}
-
-async function clearLogAndReset() {
-  resetStateToPristine();
-  await saveProfileToCloud();
-  render();
-}
-
-function bindClearLogButtons() {
-  const candidates = [];
-  ["clearLogBtn", "clearLog", "clear-log", "resetLogBtn", "resetLog"].forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) candidates.push(el);
-  });
-
-  document.querySelectorAll('button, [role="button"]').forEach((el) => {
-    const txt = (el.textContent || '').trim().toLowerCase();
-    if (txt === 'clear log' || txt === 'reset log' || txt === 'clear history') {
-      candidates.push(el);
-    }
-  });
-
-  const seen = new Set();
-  candidates.forEach((btn) => {
-    if (!btn || seen.has(btn)) return;
-    seen.add(btn);
-    btn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      await clearLogAndReset();
-    });
-  });
-}
-
 async function saveProfileToCloud() {
   if (!window.propguardCloud?.saveProfile) return;
 
@@ -797,6 +728,52 @@ async function saveProfileToCloud() {
     sessions: state.sessions,
     lastCalculation: state.lastCalculation
   });
+}
+
+
+function resetOperationalState() {
+  state.currentBalance = state.startingBalance;
+  state.highestBalance = state.startingBalance;
+  state.tradesToday = 0;
+  state.lossesInRow = 0;
+  state.tradeResults = [];
+  state.balanceHistory = [state.startingBalance];
+  state.sessions = {
+    London: { trades: 0, pnl: 0 },
+    "New York": { trades: 0, pnl: 0 },
+    Asia: { trades: 0, pnl: 0 }
+  };
+  state.lastCalculation = {
+    riskPerTrade: 0,
+    suggestedContracts: 0,
+    dailyImpact: 0,
+    drawdownImpact: 0
+  };
+
+  if (els.tradePnl) els.tradePnl.value = 200;
+  if (els.tradeSession) els.tradeSession.value = "New York";
+  if (els.currentBalanceInput) els.currentBalanceInput.value = state.currentBalance.toFixed(0);
+  if (els.highestBalanceInput) els.highestBalanceInput.value = state.highestBalance.toFixed(0);
+
+  setText(els.tradeMessage, "Trade log cleared. Account metrics reset to a fresh starting state.");
+}
+
+async function clearLog() {
+  const confirmed = window.confirm(
+    "Clear the full trade log for this account and reset dashboard metrics back to zero?"
+  );
+
+  if (!confirmed) return;
+
+  resetOperationalState();
+
+  if (window.propguardCloud?.clearTrades) {
+    await window.propguardCloud.clearTrades();
+  }
+
+  await saveProfileToCloud();
+  calculateTrade(false);
+  render();
 }
 
 async function applyTrade(result) {
@@ -929,6 +906,12 @@ if (els.focusClose && els.focusOverlay) {
   });
 }
 
+if (els.clearLogBtn) {
+  els.clearLogBtn.addEventListener("click", async () => {
+    await clearLog();
+  });
+}
+
 window.addEventListener("resize", renderChart);
 
 window.applyCloudState = function applyCloudState(profile, trades = []) {
@@ -982,6 +965,5 @@ if (els.tpRow) {
   els.tpRow.style.display = "grid";
 }
 
-bindClearLogButtons();
 calculateTrade(false);
 render();
