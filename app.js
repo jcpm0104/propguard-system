@@ -113,8 +113,7 @@ const els = {
   manualContractsInput: $("manualContractsInput"),
 
   tradePnl: $("tradePnl"),
-  tradeSession: $("tradeSession"),
-  clearLogBtn: $("clearLogBtn")
+  tradeSession: $("tradeSession")
 };
 
 function setText(el, value) {
@@ -177,7 +176,7 @@ function computeConsistency() {
     score -= 10;
   }
 
-  return clamp(Math.round(score), 25, 100);
+  return clamp(Math.round(score), 25, 99);
 }
 
 function computeSurvival(consistency) {
@@ -191,7 +190,7 @@ function computeSurvival(consistency) {
   }
 
   score -= state.lossesInRow * 3;
-  return clamp(Math.round(score), 15, 100);
+  return clamp(Math.round(score), 15, 99);
 }
 
 function riskHeatValue(consistency, survival) {
@@ -730,52 +729,6 @@ async function saveProfileToCloud() {
   });
 }
 
-
-function resetOperationalState() {
-  state.currentBalance = state.startingBalance;
-  state.highestBalance = state.startingBalance;
-  state.tradesToday = 0;
-  state.lossesInRow = 0;
-  state.tradeResults = [];
-  state.balanceHistory = [state.startingBalance];
-  state.sessions = {
-    London: { trades: 0, pnl: 0 },
-    "New York": { trades: 0, pnl: 0 },
-    Asia: { trades: 0, pnl: 0 }
-  };
-  state.lastCalculation = {
-    riskPerTrade: 0,
-    suggestedContracts: 0,
-    dailyImpact: 0,
-    drawdownImpact: 0
-  };
-
-  if (els.tradePnl) els.tradePnl.value = 200;
-  if (els.tradeSession) els.tradeSession.value = "New York";
-  if (els.currentBalanceInput) els.currentBalanceInput.value = state.currentBalance.toFixed(0);
-  if (els.highestBalanceInput) els.highestBalanceInput.value = state.highestBalance.toFixed(0);
-
-  setText(els.tradeMessage, "Trade log cleared. Account metrics reset to a fresh starting state.");
-}
-
-async function clearLog() {
-  const confirmed = window.confirm(
-    "Clear the full trade log for this account and reset dashboard metrics back to zero?"
-  );
-
-  if (!confirmed) return;
-
-  resetOperationalState();
-
-  if (window.propguardCloud?.clearTrades) {
-    await window.propguardCloud.clearTrades();
-  }
-
-  await saveProfileToCloud();
-  calculateTrade(false);
-  render();
-}
-
 async function applyTrade(result) {
   if (result === "win" || result === "loss") {
     const validPnl = validateTradeLogInput();
@@ -903,12 +856,6 @@ if (els.focusToggle && els.focusOverlay) {
 if (els.focusClose && els.focusOverlay) {
   els.focusClose.addEventListener("click", () => {
     els.focusOverlay.classList.add("hidden");
-  });
-}
-
-if (els.clearLogBtn) {
-  els.clearLogBtn.addEventListener("click", async () => {
-    await clearLog();
   });
 }
 
