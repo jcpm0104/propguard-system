@@ -251,7 +251,7 @@ function computeConsistency() {
   if (state.lastCalculation.riskPerTrade > state.currentBalance * (state.maxRiskPercent / 100)) score -= 12;
   if (state.lastCalculation.dailyImpact > 30) score -= 8;
   if (state.lossesInRow >= 3 && state.lastCalculation.dailyImpact > 10) score -= 10;
-  return clamp(Math.round(score), 25, 99);
+  return clamp(Math.round(score), 25, 100);
 }
 
 function computeSurvival(consistency) {
@@ -260,7 +260,7 @@ function computeSurvival(consistency) {
   if (trailingDrawdownRemaining() < state.trailingDrawdown * 0.2) score -= 18;
   else if (trailingDrawdownRemaining() < state.trailingDrawdown * 0.4) score -= 8;
   score -= state.lossesInRow * 3;
-  return clamp(Math.round(score), 15, 99);
+  return clamp(Math.round(score), 15, 100);
 }
 
 function riskHeatValue(consistency, survival) {
@@ -795,13 +795,25 @@ function exportTradesToCSV() {
   showToast("CSV export ready.", "success");
 }
 
-async function clearTrades() {
-  if (!window.confirm("Clear all saved trades from the current journal? This cannot be undone.")) return;
+
+function resetTradeCalculatorOutputs() {
+  setText(els.suggestedSize, "0 contracts");
+  setText(els.riskPerTradeOut, formatMoney(0));
+  setText(els.rrOut, els.quickMode?.checked ? "Quick mode" : "1 : 0");
+  setText(els.dailyImpactOut, "0%");
+  setText(els.pointsOut, "0");
+  setText(els.ticksOut, "0");
+  setText(els.riskPerContractOut, formatMoney(0));
+  setText(els.riskImpactDailyOut, "0%");
+  setText(els.riskImpactDrawdownOut, "0%");
+}
+
+function resetJournalStateToBaseline() {
   state.tradeHistory = [];
   state.tradeResults = [];
   state.balanceHistory = [state.startingBalance];
   state.currentBalance = state.startingBalance;
-  state.highestBalance = Math.max(state.highestBalance, state.startingBalance);
+  state.highestBalance = state.startingBalance;
   state.tradesToday = 0;
   state.lossesInRow = 0;
   state.sessions = {
@@ -809,11 +821,28 @@ async function clearTrades() {
     "New York": { trades: 0, pnl: 0 },
     Asia: { trades: 0, pnl: 0 }
   };
+  state.lastCalculation = {
+    riskPerTrade: 0,
+    suggestedContracts: 0,
+    dailyImpact: 0,
+    drawdownImpact: 0
+  };
+
   if (els.currentBalanceInput) els.currentBalanceInput.value = state.currentBalance;
+  if (els.highestBalanceInput) els.highestBalanceInput.value = state.highestBalance;
+  if (els.tradePnl) els.tradePnl.value = "";
+  if (els.tradeTag) els.tradeTag.value = "";
+  if (els.tradeNote) els.tradeNote.value = "";
+  resetTradeCalculatorOutputs();
+}
+
+async function clearTrades() {
+  if (!window.confirm("Clear all saved trades from the current journal? This will fully reset the active account metrics and cannot be undone.")) return;
+  resetJournalStateToBaseline();
   if (window.propguardCloud?.clearTrades) await window.propguardCloud.clearTrades();
   await saveProfileToCloud();
   render();
-  showToast("Trade journal cleared.", "success");
+  showToast("Trade journal cleared. Account metrics reset to baseline.", "success");
 }
 
 function applyPropFirmDefaults(name) {
@@ -968,62 +997,3 @@ window.propguardRefreshUI = function propguardRefreshUI() {
 if (els.tpRow) els.tpRow.style.display = "grid";
 calculateTrade(false);
 render();
-
-
-// ===== MULTI ACCOUNT + RESET SYSTEM =====
-
-let accounts = JSON.parse(localStorage.getItem("propguard_accounts") || "[]");
-let activeAccountId = localStorage.getItem("propguard_active_account");
-
-function saveAccounts(){
-  localStorage.setItem("propguard_accounts", JSON.stringify(accounts));
-}
-
-function setActiveAccount(id){
-  activeAccountId = id;
-  localStorage.setItem("propguard_active_account", id);
-  const acc = accounts.find(a=>a.id===id);
-  if(!acc) return;
-  Object.assign(state, acc.state);
-}
-
-function createAccount(name){
-  const id = "acc_"+Date.now();
-  const newAcc = { id, name, state: JSON.parse(JSON.stringify(state)) };
-  accounts.push(newAcc);
-  saveAccounts();
-  setActiveAccount(id);
-}
-
-function saveCurrentStateToAccount(){
-  if(!activeAccountId) return;
-  const acc = accounts.find(a=>a.id===activeAccountId);
-  if(!acc) return;
-  acc.state = JSON.parse(JSON.stringify(state));
-  saveAccounts();
-}
-
-function resetCurrentAccount(){
-  if(!activeAccountId) return;
-  if(!confirm("Reset this account? Trades and stats will be erased.")) return;
-
-  state.tradeHistory = [];
-  state.tradeResults = [];
-  state.balanceHistory = [state.startingBalance];
-  state.tradesToday = 0;
-  state.lossesInRow = 0;
-  state.chartPoints = [];
-
-  saveCurrentStateToAccount();
-}
-
-setInterval(saveCurrentStateToAccount,3000);
-
-if(accounts.length && activeAccountId){
-  setActiveAccount(activeAccountId);
-}else if(accounts.length){
-  setActiveAccount(accounts[0].id);
-}else{
-  createAccount("Main Account");
-}
-
