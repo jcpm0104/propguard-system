@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PropGuard System</title>
   <meta name="description" content="Never Break Your Prop Firm Rules Again." />
+  <meta name="theme-color" content="#090f19" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="styles.css" />
   <style>
     .hidden { display: none !important; }
@@ -18,184 +20,44 @@
     .auth-actions { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-top: 16px; }
     .auth-status { min-height: 20px; margin-top: 12px; opacity: .9; }
     .topbar-actions { display: flex; gap: 12px; align-items: center; }
-
-    .landing-section {
-      margin-top: 18px;
-      padding: 22px;
-      border-radius: 24px;
-      background: linear-gradient(180deg, rgba(17,24,39,.82), rgba(12,18,31,.9));
-      border: 1px solid rgba(255,255,255,.06);
-      box-shadow: 0 20px 50px rgba(0,0,0,.25);
-    }
-
-    .landing-title {
-      margin: 0 0 8px;
-      font-size: 1.6rem;
-      letter-spacing: -.03em;
-    }
-
-    .landing-copy {
-      margin: 0;
-      color: var(--muted);
-      max-width: 760px;
-    }
-
-    .how-grid,
-    .why-grid,
-    .demo-grid {
-      display: grid;
-      gap: 16px;
-      margin-top: 18px;
-    }
-
-    .how-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
-    .why-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .landing-section { margin-top: 18px; padding: 22px; border-radius: 24px; background: linear-gradient(180deg, rgba(17,24,39,.82), rgba(12,18,31,.9)); border: 1px solid rgba(255,255,255,.06); box-shadow: 0 20px 50px rgba(0,0,0,.25); }
+    .landing-title { margin: 0 0 8px; font-size: 1.6rem; letter-spacing: -.03em; }
+    .landing-copy { margin: 0; color: var(--muted); max-width: 760px; }
+    .how-grid,.why-grid,.demo-grid,.trust-grid { display: grid; gap: 16px; margin-top: 18px; }
+    .how-grid,.why-grid,.trust-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
     .demo-grid { grid-template-columns: 1.2fr .8fr; }
-
-    .landing-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 18px;
-      padding: 18px;
-    }
-
-    .landing-card h3,
-    .landing-card h4 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-    }
-
-    .landing-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .step-number {
-      display: inline-flex;
-      width: 30px;
-      height: 30px;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      background: rgba(30,107,255,0.16);
-      color: #b8ceff;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
-
-    .preview-shell {
-      display: grid;
-      gap: 14px;
-    }
-
-    .preview-panel {
-      background: #0c1422;
-      border: 1px solid rgba(255,255,255,.05);
-      border-radius: 18px;
-      padding: 16px;
-    }
-
-    .preview-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .preview-head strong {
-      font-size: 1rem;
-    }
-
-    .preview-safe {
-      color: var(--green);
-      font-weight: 800;
-    }
-
-    .preview-cards {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 12px;
-    }
-
-    .preview-metric {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 14px;
-      padding: 14px;
-    }
-
-    .preview-metric span {
-      display: block;
-      color: var(--muted);
-      font-size: .82rem;
-      margin-bottom: 8px;
-    }
-
-    .preview-metric strong {
-      font-size: 1.2rem;
-    }
-
-    .preview-trades {
-      display: grid;
-      gap: 10px;
-    }
-
-    .preview-trade {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .preview-trade small {
-      color: var(--muted);
-      display: block;
-      margin-top: 2px;
-    }
-
+    .landing-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 18px; padding: 18px; }
+    .landing-card h3,.landing-card h4 { margin: 0 0 10px; font-size: 1rem; }
+    .landing-card p { margin: 0; color: var(--muted); line-height: 1.5; }
+    .step-number { display: inline-flex; width: 30px; height: 30px; align-items: center; justify-content: center; border-radius: 999px; background: rgba(30,107,255,0.16); color: #b8ceff; font-weight: 800; margin-bottom: 12px; }
+    .preview-shell { display: grid; gap: 14px; }
+    .preview-panel { background: #0c1422; border: 1px solid rgba(255,255,255,.05); border-radius: 18px; padding: 16px; }
+    .preview-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .preview-head strong { font-size: 1rem; }
+    .preview-safe { color: var(--green); font-weight: 800; }
+    .preview-cards { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    .preview-metric { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 14px; padding: 14px; }
+    .preview-metric span { display: block; color: var(--muted); font-size: .82rem; margin-bottom: 8px; }
+    .preview-metric strong { font-size: 1.2rem; }
+    .preview-trades { display: grid; gap: 10px; }
+    .preview-trade { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); }
+    .preview-trade small { color: var(--muted); display: block; margin-top: 2px; }
     .preview-win { color: #84efb1; font-weight: 800; }
     .preview-loss { color: #ff9c9c; font-weight: 800; }
     .preview-flat { color: #ffd08a; font-weight: 800; }
-
-    .mini-heat {
-      margin-top: 14px;
-    }
-
-    .mini-heat-bar {
-      background: #09111d;
-      border: 1px solid rgba(255,255,255,.06);
-      border-radius: 999px;
-      height: 12px;
-      overflow: hidden;
-    }
-
-    .mini-heat-bar span {
-      display: block;
-      width: 24%;
-      height: 100%;
-      background: linear-gradient(90deg, var(--green), var(--yellow), var(--red));
-    }
-
-    .landing-note {
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: .92rem;
-    }
-
+    .mini-heat { margin-top: 14px; }
+    .mini-heat-bar { background: #09111d; border: 1px solid rgba(255,255,255,.06); border-radius: 999px; height: 12px; overflow: hidden; }
+    .mini-heat-bar span { display: block; width: 24%; height: 100%; background: linear-gradient(90deg, var(--green), var(--yellow), var(--red)); }
+    .landing-note { margin-top: 14px; color: var(--muted); font-size: .92rem; }
+    .check-row { display:flex; gap:10px; align-items:flex-start; }
+    .check-row input { width:auto; margin-top: 3px; }
+    .form-note { color: var(--muted); font-size: .9rem; }
+    .inline-link-btn { background:none; border:none; color:#a9c2ff; font:inherit; padding:0; cursor:pointer; }
+    .auth-utility-row { display:flex; gap:12px; flex-wrap:wrap; }
+    .footer-legal { margin: 18px auto 30px; color: var(--muted); display:flex; justify-content:center; gap:18px; flex-wrap:wrap; font-size:.92rem; }
     @media (max-width: 980px) {
-      .how-grid,
-      .why-grid,
-      .demo-grid {
-        grid-template-columns: 1fr;
-      }
+      .how-grid,.why-grid,.demo-grid,.trust-grid { grid-template-columns: 1fr; }
     }
-
     @media (max-width: 768px) {
       .auth-row { grid-template-columns: 1fr; }
       .preview-cards { grid-template-columns: 1fr; }
@@ -203,6 +65,10 @@
   </style>
 </head>
 <body>
+  <div id="toastContainer" class="toast-stack"></div>
+
+  <div id="modalBackdrop" class="modal-backdrop hidden"></div>
+
   <div id="publicApp" class="hidden">
     <div class="topbar">
       <div class="container nav-wrap">
@@ -237,174 +103,75 @@
             <span>Real-time risk engine</span>
             <span>Behavior monitoring</span>
             <span>Session tracking</span>
+            <span>PWA installable</span>
           </div>
         </div>
 
-        <div class="hero-status panel">
-          <div class="mini-label">TRADER STATUS</div>
+        <div class="panel hero-status">
+          <div class="mini-label">PROP ACCOUNT HEALTH</div>
           <div class="hero-status-value safe">SAFE</div>
-          <div class="hero-status-text">Professional prop protection before you ever place the trade.</div>
+          <div class="hero-status-text">Pre-trade sizing, drawdown awareness, and behavioral guardrails in one place.</div>
           <div class="hero-status-grid">
-            <div class="metric-card compact"><span>Daily Risk Used</span><strong>18%</strong></div>
-            <div class="metric-card compact"><span>Drawdown Left</span><strong>$3,250</strong></div>
-            <div class="metric-card compact"><span>Consistency</span><strong>84</strong></div>
-            <div class="metric-card compact"><span>Survival</span><strong>91%</strong></div>
+            <div class="metric-card compact"><span>Max clarity</span><strong>Pre-trade</strong></div>
+            <div class="metric-card compact"><span>Fast feedback</span><strong>Live</strong></div>
+            <div class="metric-card compact"><span>Export history</span><strong>CSV</strong></div>
+            <div class="metric-card compact"><span>Secure auth</span><strong>Email login</strong></div>
           </div>
         </div>
       </div>
     </header>
 
     <section id="feature-preview" class="container landing-section">
-      <h2 class="landing-title">Platform Preview</h2>
-      <p class="landing-copy">
-        This is how PropGuard helps a funded trader stay alive: position sizing before execution, rule impact before the trade, and behavioral feedback after the trade.
-      </p>
-
+      <h2 class="landing-title">See the product before you sign in</h2>
+      <p class="landing-copy">Your buyers need to understand the value in seconds. The dashboard below previews the kind of feedback PropGuard gives before and after each trade.</p>
       <div class="demo-grid">
-        <div class="landing-card">
-          <h3>Protected Dashboard Example</h3>
-          <div class="preview-shell">
-            <div class="preview-panel">
-              <div class="preview-head">
-                <strong>Risk State</strong>
-                <span class="preview-safe">SAFE</span>
-              </div>
-              <div class="preview-cards">
-                <div class="preview-metric">
-                  <span>Daily Risk Used</span>
-                  <strong>18%</strong>
-                </div>
-                <div class="preview-metric">
-                  <span>Drawdown Remaining</span>
-                  <strong>$3,250</strong>
-                </div>
-                <div class="preview-metric">
-                  <span>Consistency Score</span>
-                  <strong>84 / 100</strong>
-                </div>
-                <div class="preview-metric">
-                  <span>Survival Score</span>
-                  <strong>91%</strong>
-                </div>
-              </div>
-              <div class="mini-heat">
-                <div class="mini-heat-bar"><span></span></div>
-              </div>
+        <div class="preview-shell">
+          <div class="preview-panel">
+            <div class="preview-head">
+              <strong>Live Risk State</strong>
+              <span class="preview-safe">SAFE</span>
             </div>
-
-            <div class="preview-panel">
-              <div class="preview-head">
-                <strong>Trade Flow Example</strong>
-                <span>New York</span>
-              </div>
-              <div class="preview-trades">
-                <div class="preview-trade">
-                  <div>
-                    <strong>Trade 1</strong>
-                    <small>MNQ / New York</small>
-                  </div>
-                  <span class="preview-win">+$240</span>
-                </div>
-                <div class="preview-trade">
-                  <div>
-                    <strong>Trade 2</strong>
-                    <small>MNQ / New York</small>
-                  </div>
-                  <span class="preview-loss">-$120</span>
-                </div>
-                <div class="preview-trade">
-                  <div>
-                    <strong>Trade 3</strong>
-                    <small>MNQ / New York</small>
-                  </div>
-                  <span class="preview-flat">$0</span>
-                </div>
-              </div>
-              <p class="landing-note">Log trades, measure risk, and monitor behavior without leaving your workflow.</p>
+            <div class="preview-cards">
+              <div class="preview-metric"><span>Daily Risk Used</span><strong>18%</strong></div>
+              <div class="preview-metric"><span>Drawdown Remaining</span><strong>$1,920</strong></div>
+              <div class="preview-metric"><span>Consistency</span><strong>87 / 100</strong></div>
+              <div class="preview-metric"><span>Suggested Size</span><strong>3 MNQ</strong></div>
+            </div>
+            <div class="mini-heat">
+              <div class="mini-heat-bar"><span></span></div>
             </div>
           </div>
         </div>
-
-        <div class="landing-card">
-          <h3>What the trader sees instantly</h3>
+        <div class="preview-panel">
+          <div class="preview-head">
+            <strong>Recent Trade Log</strong>
+          </div>
           <div class="preview-trades">
-            <div class="preview-trade">
-              <div>
-                <strong>Suggested Size</strong>
-                <small>Based on account size and stop distance</small>
-              </div>
-              <span class="preview-safe">12 contracts</span>
-            </div>
-            <div class="preview-trade">
-              <div>
-                <strong>Risk Per Trade</strong>
-                <small>Before execution</small>
-              </div>
-              <span>$480</span>
-            </div>
-            <div class="preview-trade">
-              <div>
-                <strong>Rule Guard</strong>
-                <small>Prop rule safety check</small>
-              </div>
-              <span class="preview-safe">SAFE</span>
-            </div>
-            <div class="preview-trade">
-              <div>
-                <strong>Behavior Warning</strong>
-                <small>Detects pressure, overtrading, revenge risk</small>
-              </div>
-              <span>Active</span>
-            </div>
+            <div class="preview-trade"><div><strong>Win</strong><small>New York session</small></div><span class="preview-win">+$240</span></div>
+            <div class="preview-trade"><div><strong>Loss</strong><small>London session</small></div><span class="preview-loss">-$120</span></div>
+            <div class="preview-trade"><div><strong>Break Even</strong><small>New York session</small></div><span class="preview-flat">$0</span></div>
           </div>
         </div>
       </div>
+      <p class="landing-note">Designed to feel fast enough for scalpers but structured enough for funded-account protection.</p>
     </section>
 
     <section id="how-it-works" class="container landing-section">
-      <h2 class="landing-title">How PropGuard Works</h2>
-      <p class="landing-copy">
-        The system is designed for funded traders who need structure before and after each trade.
-      </p>
-
+      <h2 class="landing-title">How it works</h2>
+      <p class="landing-copy">The workflow is intentionally simple so traders actually use it before blowing the account.</p>
       <div class="how-grid">
-        <div class="landing-card">
-          <div class="step-number">1</div>
-          <h4>Configure your account rules</h4>
-          <p>Set your prop firm, drawdown limits, daily loss limit, starting balance, and max risk per trade.</p>
-        </div>
-        <div class="landing-card">
-          <div class="step-number">2</div>
-          <h4>Calculate risk before execution</h4>
-          <p>PropGuard tells you size, risk per contract, daily impact, drawdown impact, and whether the trade is safe.</p>
-        </div>
-        <div class="landing-card">
-          <div class="step-number">3</div>
-          <h4>Track behavior after each trade</h4>
-          <p>Log wins, losses, or break-even trades and instantly update consistency, survival, session tracking, and equity curve.</p>
-        </div>
+        <div class="landing-card"><div class="step-number">1</div><h3>Set your firm rules</h3><p>Apply your balance, daily loss, trailing drawdown, and personal max risk settings.</p></div>
+        <div class="landing-card"><div class="step-number">2</div><h3>Calculate each setup</h3><p>Get suggested size, contract risk, daily impact, drawdown impact, and a rule guard signal before entry.</p></div>
+        <div class="landing-card"><div class="step-number">3</div><h3>Track execution quality</h3><p>Log trades, watch consistency, session performance, equity curve, expectancy, and behavioral pressure.</p></div>
       </div>
     </section>
 
     <section class="container landing-section">
-      <h2 class="landing-title">Why PropGuard Is Different</h2>
-      <p class="landing-copy">
-        Most tools focus on charts. PropGuard focuses on the trader’s operating discipline.
-      </p>
-
-      <div class="why-grid">
-        <div class="landing-card">
-          <h4>Built for prop firm survival</h4>
-          <p>Designed around drawdown, daily loss limits, and trader mistakes that cause account failure.</p>
-        </div>
-        <div class="landing-card">
-          <h4>Made for scalpers</h4>
-          <p>Fast enough to support short-term execution without forcing a heavy workflow before every trade.</p>
-        </div>
-        <div class="landing-card">
-          <h4>Behavior + risk together</h4>
-          <p>Position sizing, rule protection, session analytics, and behavioral pressure all in one system.</p>
-        </div>
+      <h2 class="landing-title">Why this is more market-ready now</h2>
+      <div class="trust-grid">
+        <div class="landing-card"><h4>Legal + trust layer</h4><p>Terms, privacy, disclaimers, support access, and verification prompts create more buyer confidence.</p></div>
+        <div class="landing-card"><h4>Retention layer</h4><p>Trade history, filters, export, notes, advanced metrics, and install support improve product stickiness.</p></div>
+        <div class="landing-card"><h4>Operational polish</h4><p>Toasts, onboarding modal, empty states, chart tooltip, install prompt, and verification banners remove MVP rough edges.</p></div>
       </div>
     </section>
 
@@ -426,37 +193,65 @@
           <div class="auth-row">
             <label>
               <span>Email</span>
-              <input id="signInEmail" type="email" required />
+              <input id="signInEmail" type="email" autocomplete="email" required />
             </label>
             <label>
               <span>Password</span>
-              <input id="signInPassword" type="password" required />
+              <input id="signInPassword" type="password" autocomplete="current-password" required />
             </label>
           </div>
           <div class="auth-actions">
-            <button class="btn btn-primary" type="submit">Sign In</button>
+            <div class="auth-utility-row">
+              <button class="btn btn-primary" type="submit">Sign In</button>
+              <button id="forgotPasswordBtn" class="btn btn-secondary" type="button">Forgot Password</button>
+            </div>
+            <div class="form-note">By signing in, you agree to use PropGuard as a decision-support tool, not financial advice.</div>
           </div>
         </form>
 
         <form id="signUpForm" class="hidden">
           <div class="auth-row">
             <label>
-              <span>Email</span>
-              <input id="signUpEmail" type="email" required />
+              <span>Full Name</span>
+              <input id="signUpName" type="text" autocomplete="name" required />
             </label>
             <label>
+              <span>Email</span>
+              <input id="signUpEmail" type="email" autocomplete="email" required />
+            </label>
+          </div>
+          <div class="auth-row">
+            <label>
               <span>Password</span>
-              <input id="signUpPassword" type="password" minlength="6" required />
+              <input id="signUpPassword" type="password" minlength="8" autocomplete="new-password" required />
+            </label>
+            <label>
+              <span>Confirm Password</span>
+              <input id="signUpPasswordConfirm" type="password" minlength="8" autocomplete="new-password" required />
+            </label>
+          </div>
+          <div class="inline-inputs">
+            <label class="check-row">
+              <input id="acceptTerms" type="checkbox" required />
+              <span>I agree to the <button type="button" class="inline-link-btn" data-open-modal="termsModal">Terms of Use</button> and <button type="button" class="inline-link-btn" data-open-modal="privacyModal">Privacy Policy</button>.</span>
             </label>
           </div>
           <div class="auth-actions">
             <button class="btn btn-primary" type="submit">Create Account</button>
+            <div class="form-note">Email verification is requested on signup for a cleaner trust layer in production.</div>
           </div>
         </form>
 
         <p id="authMessage" class="helper auth-status"></p>
       </div>
     </section>
+
+    <div class="footer-legal container">
+      <button type="button" class="inline-link-btn" data-open-modal="termsModal">Terms of Use</button>
+      <button type="button" class="inline-link-btn" data-open-modal="privacyModal">Privacy Policy</button>
+      <button type="button" class="inline-link-btn" data-open-modal="disclaimerModal">Risk Disclaimer</button>
+      <button type="button" class="inline-link-btn" data-open-modal="supportModal">Support</button>
+    </div>
   </div>
 
   <div id="privateApp" class="hidden">
@@ -475,19 +270,25 @@
             <a href="#engine">Risk Engine</a>
             <a href="#analytics">Analytics</a>
           </div>
+          <button id="installBtn" class="btn btn-secondary small hidden" type="button">Install App</button>
           <button id="logoutBtn" class="btn btn-secondary small" type="button">Log Out</button>
         </div>
       </div>
     </div>
 
     <main class="container app-shell">
+      <section id="accountHealthBanner" class="verification-banner hidden"></section>
+
       <section id="dashboard" class="panel section-main">
         <div class="section-header">
           <div>
             <div class="eyebrow">Main command center</div>
             <h2>Risk dashboard</h2>
           </div>
-          <button id="focusToggle" class="btn btn-secondary small">Focus Mode</button>
+          <div class="topbar-actions">
+            <button id="openOnboarding" class="btn btn-secondary small" type="button">Guide</button>
+            <button id="focusToggle" class="btn btn-secondary small" type="button">Focus Mode</button>
+          </div>
         </div>
 
         <div class="status-banner">
@@ -504,10 +305,7 @@
         </div>
 
         <div class="heat-wrap">
-          <div class="heat-head">
-            <span>Risk Heat Bar</span>
-            <strong id="heatLabel">SAFE</strong>
-          </div>
+          <div class="heat-head"><span>Risk Heat Bar</span><strong id="heatLabel">SAFE</strong></div>
           <div class="heat-bar"><span id="heatFill"></span></div>
         </div>
 
@@ -528,20 +326,14 @@
               <button class="action-btn loss" data-result="loss">LOSS</button>
               <button class="action-btn be" data-result="be">BREAK EVEN</button>
             </div>
-            <p id="tradeMessage" class="helper">Use this after each trade to test real-time dashboard updates.</p>
+            <p id="tradeMessage" class="helper">Use this after each trade to update the dashboard in real time.</p>
             <div class="inline-inputs split2">
-              <label>
-                <span>Trade P&amp;L ($)</span>
-                <input id="tradePnl" type="number" value="200" step="1" />
-              </label>
-              <label>
-                <span>Session</span>
-                <select id="tradeSession">
-                  <option value="London">London</option>
-                  <option value="New York" selected>New York</option>
-                  <option value="Asia">Asia</option>
-                </select>
-              </label>
+              <label><span>Trade P&amp;L ($)</span><input id="tradePnl" type="number" value="200" step="1" /></label>
+              <label><span>Session</span><select id="tradeSession"><option value="London">London</option><option value="New York" selected>New York</option><option value="Asia">Asia</option></select></label>
+            </div>
+            <div class="inline-inputs split2">
+              <label><span>Setup Tag</span><input id="tradeTag" type="text" maxlength="40" placeholder="e.g. Opening range" /></label>
+              <label><span>Trade Note</span><input id="tradeNote" type="text" maxlength="120" placeholder="Optional journal note" /></label>
             </div>
           </div>
 
@@ -577,24 +369,8 @@
           <form id="settingsForm" class="panel-inner">
             <div class="panel-title">Account &amp; rule setup</div>
             <div class="inline-inputs split2">
-              <label><span>Prop Firm</span>
-                <select id="propFirm">
-                  <option>Apex</option>
-                  <option>Topstep</option>
-                  <option>FTMO</option>
-                  <option>Custom</option>
-                </select>
-              </label>
-              <label><span>Instrument</span>
-                <select id="instrument">
-                  <option value="MNQ" selected>MNQ</option>
-                  <option value="NQ">NQ</option>
-                  <option value="MES">MES</option>
-                  <option value="ES">ES</option>
-                  <option value="CL">CL</option>
-                  <option value="CUSTOM">Custom</option>
-                </select>
-              </label>
+              <label><span>Prop Firm</span><select id="propFirm"><option>Apex</option><option>Topstep</option><option>FTMO</option><option>Custom</option></select></label>
+              <label><span>Instrument</span><select id="instrument"><option value="MNQ" selected>MNQ</option><option value="NQ">NQ</option><option value="MES">MES</option><option value="ES">ES</option><option value="CL">CL</option><option value="CUSTOM">Custom</option></select></label>
             </div>
             <div class="inline-inputs split2">
               <label><span>Starting Balance ($)</span><input id="startingBalanceInput" type="number" value="50000" step="1"></label>
@@ -608,14 +384,12 @@
               <label><span>Trailing Drawdown ($)</span><input id="trailingDrawdownInput" type="number" value="2500" step="1"></label>
               <label><span>Max Risk per Trade (%)</span><input id="maxRiskPercentInput" type="number" value="1" step="0.1"></label>
             </div>
+            <div class="helper">Preset values auto-fill for Apex, Topstep, and FTMO. Custom keeps your manual settings.</div>
             <button class="btn btn-primary btn-block" type="submit">Apply Account Rules</button>
           </form>
 
           <form id="riskForm" class="panel-inner">
-            <div class="panel-title row-between">
-              <span>Trade calculator</span>
-              <label class="quick-check"><input type="checkbox" id="quickMode"> <span>Quick Trade Mode</span></label>
-            </div>
+            <div class="panel-title row-between"><span>Trade calculator</span><label class="quick-check"><input type="checkbox" id="quickMode"> <span>Quick Trade Mode</span></label></div>
             <div class="inline-inputs split2">
               <label><span>Entry Price</span><input id="entryInput" type="number" value="19000" step="0.01"></label>
               <label><span>Stop Loss</span><input id="stopInput" type="number" value="18980" step="0.01"></label>
@@ -683,12 +457,61 @@
         </div>
 
         <div class="panel-inner chart-panel">
-          <div class="panel-title">Equity Curve Tracker</div>
-          <canvas id="equityCanvas" width="900" height="260"></canvas>
+          <div class="row-between chart-heading">
+            <div class="panel-title">Equity Curve Tracker</div>
+            <div class="helper">Hover the line to inspect balance points.</div>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="equityCanvas" width="900" height="260"></canvas>
+            <div id="chartTooltip" class="chart-tooltip hidden"></div>
+          </div>
           <div class="chart-stats">
             <div class="metric-card compact"><span>Highest Balance</span><strong id="highestBalanceOut">$0</strong></div>
             <div class="metric-card compact"><span>Current Balance</span><strong id="currentBalanceOut">$0</strong></div>
             <div class="metric-card compact"><span>Drawdown From Peak</span><strong id="drawdownFromPeakOut">$0</strong></div>
+          </div>
+        </div>
+
+        <div class="grid analytics-extended">
+          <div class="panel-inner">
+            <div class="panel-title">Advanced Metrics</div>
+            <div class="metrics-grid grid advanced-metrics-grid">
+              <div class="metric-card compact"><span>Win Rate</span><strong id="winRateOut">0%</strong></div>
+              <div class="metric-card compact"><span>Net P&amp;L</span><strong id="netPnlOut">$0</strong></div>
+              <div class="metric-card compact"><span>Avg Win</span><strong id="avgWinOut">$0</strong></div>
+              <div class="metric-card compact"><span>Avg Loss</span><strong id="avgLossOut">$0</strong></div>
+              <div class="metric-card compact"><span>Expectancy</span><strong id="expectancyOut">$0</strong></div>
+              <div class="metric-card compact"><span>Best Session</span><strong id="bestSessionOut">N/A</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-inner history-panel">
+          <div class="row-between history-head">
+            <div class="panel-title">Trade History</div>
+            <div class="history-actions">
+              <select id="historyFilter"><option value="all">All sessions</option><option value="London">London</option><option value="New York">New York</option><option value="Asia">Asia</option></select>
+              <button id="exportTradesBtn" type="button" class="btn btn-secondary small">Export CSV</button>
+              <button id="clearTradesBtn" type="button" class="btn btn-secondary small danger-ghost">Clear Log</button>
+            </div>
+          </div>
+          <div id="emptyTradesState" class="empty-state">No trades logged yet. Start using the Quick Trade Log to build a journal and analytics history.</div>
+          <div class="table-wrap">
+            <table class="history-table hidden" id="tradeHistoryTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Result</th>
+                  <th>P&amp;L</th>
+                  <th>Session</th>
+                  <th>Tag</th>
+                  <th>Note</th>
+                  <th>Balance After</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody id="tradeHistoryBody"></tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -711,6 +534,24 @@
     </div>
   </div>
 
+  <div id="onboardingModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="row-between"><h3>Welcome to PropGuard</h3><button class="modal-close" type="button" data-close-modal="onboardingModal">✕</button></div>
+      <p class="modal-copy">Use this workflow before you sell it or hand it to early users:</p>
+      <div class="modal-list">
+        <div><strong>1.</strong> Apply your funded account rules first.</div>
+        <div><strong>2.</strong> Run the calculator before each trade.</div>
+        <div><strong>3.</strong> Log outcomes to build analytics, expectancy, and behavior feedback.</div>
+      </div>
+      <div class="modal-actions"><button class="btn btn-primary" type="button" data-close-modal="onboardingModal">Got it</button></div>
+    </div>
+  </div>
+
+  <div id="termsModal" class="modal hidden"><div class="modal-card legal-card"><div class="row-between"><h3>Terms of Use</h3><button class="modal-close" type="button" data-close-modal="termsModal">✕</button></div><p class="modal-copy">PropGuard is provided as a software tool for risk organization and journaling. It does not guarantee compliance with any specific prop firm rules, account approval, profitability, or funding outcomes. Users are responsible for verifying firm rules, market data, and all account decisions before acting.</p><p class="modal-copy">You may customize, test, and deploy the software at your own risk. Keep legal text reviewed by your attorney before public sale.</p></div></div>
+  <div id="privacyModal" class="modal hidden"><div class="modal-card legal-card"><div class="row-between"><h3>Privacy Policy</h3><button class="modal-close" type="button" data-close-modal="privacyModal">✕</button></div><p class="modal-copy">PropGuard stores account profile settings and trade log information in your configured Firebase project. You are responsible for publishing a final privacy policy that accurately describes your production data collection, retention, analytics, support process, and third-party services before commercial launch.</p></div></div>
+  <div id="disclaimerModal" class="modal hidden"><div class="modal-card legal-card"><div class="row-between"><h3>Risk Disclaimer</h3><button class="modal-close" type="button" data-close-modal="disclaimerModal">✕</button></div><p class="modal-copy">Trading futures and prop firm evaluation accounts involves substantial risk. PropGuard is a decision-support application, not financial advice, trade execution software, or a guarantee against losses or rule violations.</p></div></div>
+  <div id="supportModal" class="modal hidden"><div class="modal-card legal-card"><div class="row-between"><h3>Support</h3><button class="modal-close" type="button" data-close-modal="supportModal">✕</button></div><p class="modal-copy">Replace the sample support contact below with your real business support channel before launch.</p><p class="modal-copy"><strong>Email:</strong> support@propguardsystem.com</p><p class="modal-copy"><strong>SLA suggestion:</strong> Reply within 1 business day for login, export, and billing-related requests.</p></div></div>
+
   <script src="app.js"></script>
 
   <script type="module">
@@ -721,7 +562,10 @@
       onAuthStateChanged,
       createUserWithEmailAndPassword,
       signInWithEmailAndPassword,
-      signOut
+      signOut,
+      sendPasswordResetEmail,
+      sendEmailVerification,
+      updateProfile
     } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
     import {
       getFirestore,
@@ -733,7 +577,8 @@
       query,
       orderBy,
       limit,
-      serverTimestamp
+      serverTimestamp,
+      deleteDoc
     } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -759,21 +604,38 @@
     const signUpForm = document.getElementById("signUpForm");
     const signInEmail = document.getElementById("signInEmail");
     const signInPassword = document.getElementById("signInPassword");
+    const signUpName = document.getElementById("signUpName");
     const signUpEmail = document.getElementById("signUpEmail");
     const signUpPassword = document.getElementById("signUpPassword");
+    const signUpPasswordConfirm = document.getElementById("signUpPasswordConfirm");
     const authMessage = document.getElementById("authMessage");
     const logoutBtn = document.getElementById("logoutBtn");
+    const forgotPasswordBtn = document.getElementById("forgotPasswordBtn");
+
+    function safeMessage(error) {
+      if (!error?.code) return error?.message || "Something went wrong.";
+      const map = {
+        "auth/email-already-in-use": "That email is already in use.",
+        "auth/invalid-email": "Please enter a valid email address.",
+        "auth/invalid-credential": "Invalid email or password.",
+        "auth/missing-password": "Please enter your password.",
+        "auth/weak-password": "Use a stronger password with at least 8 characters.",
+        "auth/too-many-requests": "Too many attempts. Please wait a moment and try again."
+      };
+      return map[error.code] || error.message || "Something went wrong.";
+    }
 
     function defaultUserProfile(user) {
       return {
         uid: user.uid,
+        displayName: user.displayName || "",
         email: user.email || "",
         propFirm: "Apex",
         instrument: "MNQ",
         startingBalance: 50000,
         currentBalance: 50000,
         highestBalance: 50000,
-        dailyLossLimit: 2000,
+        dailyLossLimit: 2500,
         trailingDrawdown: 2500,
         maxRiskPercent: 1,
         tradesToday: 0,
@@ -799,26 +661,20 @@
     async function ensureUserProfile(user) {
       const ref = doc(db, "users", user.uid);
       const snap = await getDoc(ref);
-
       if (!snap.exists()) {
         await setDoc(ref, defaultUserProfile(user));
         const createdSnap = await getDoc(ref);
         return createdSnap.data();
       }
-
       return snap.data();
     }
 
     async function loadRecentTrades(uid) {
       const tradesRef = collection(db, "users", uid, "trades");
-      const qRef = query(tradesRef, orderBy("createdAt", "desc"), limit(20));
+      const qRef = query(tradesRef, orderBy("createdAt", "desc"), limit(100));
       const snap = await getDocs(qRef);
-
       const trades = [];
-      snap.forEach((docSnap) => {
-        trades.push({ id: docSnap.id, ...docSnap.data() });
-      });
-
+      snap.forEach((docSnap) => trades.push({ id: docSnap.id, ...docSnap.data() }));
       return trades.reverse();
     }
 
@@ -828,40 +684,30 @@
       async saveProfile(partial) {
         const user = auth.currentUser;
         if (!user) return;
-
-        await setDoc(
-          doc(db, "users", user.uid),
-          {
-            ...partial,
-            updatedAt: serverTimestamp()
-          },
-          { merge: true }
-        );
+        await setDoc(doc(db, "users", user.uid), { ...partial, updatedAt: serverTimestamp() }, { merge: true });
       },
-
       async saveTrade(trade) {
         const user = auth.currentUser;
         if (!user) return;
-
         const { addDoc } = await import("https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js");
-
-        await addDoc(collection(db, "users", user.uid, "trades"), {
-          ...trade,
-          createdAt: serverTimestamp()
-        });
+        await addDoc(collection(db, "users", user.uid, "trades"), { ...trade, createdAt: serverTimestamp() });
       },
-
+      async clearTrades() {
+        const user = auth.currentUser;
+        if (!user) return;
+        const trades = await loadRecentTrades(user.uid);
+        await Promise.all(trades.map((trade) => deleteDoc(doc(db, "users", user.uid, "trades", trade.id))));
+      },
       async reloadUserData() {
         const user = auth.currentUser;
         if (!user) return null;
-
         const profileSnap = await getDoc(doc(db, "users", user.uid));
         const trades = await loadRecentTrades(user.uid);
-
-        return {
-          profile: profileSnap.exists() ? profileSnap.data() : null,
-          trades
-        };
+        return { profile: profileSnap.exists() ? profileSnap.data() : null, trades };
+      },
+      async sendVerificationEmail() {
+        if (!auth.currentUser) return;
+        await sendEmailVerification(auth.currentUser);
       }
     };
 
@@ -877,36 +723,44 @@
       authMessage.textContent = "";
     });
 
+    forgotPasswordBtn?.addEventListener("click", async () => {
+      const email = signInEmail.value.trim();
+      if (!email) {
+        authMessage.textContent = "Enter your email above first, then tap Forgot Password.";
+        return;
+      }
+      try {
+        await sendPasswordResetEmail(auth, email);
+        authMessage.textContent = "Password reset email sent.";
+      } catch (error) {
+        authMessage.textContent = safeMessage(error);
+      }
+    });
+
     signUpForm?.addEventListener("submit", async (e) => {
       e.preventDefault();
-
+      if (signUpPassword.value !== signUpPasswordConfirm.value) {
+        authMessage.textContent = "Passwords do not match.";
+        return;
+      }
       try {
-        const cred = await createUserWithEmailAndPassword(
-          auth,
-          signUpEmail.value.trim(),
-          signUpPassword.value.trim()
-        );
-
-        await ensureUserProfile(cred.user);
-        authMessage.textContent = "Account created successfully.";
+        const cred = await createUserWithEmailAndPassword(auth, signUpEmail.value.trim(), signUpPassword.value.trim());
+        await updateProfile(cred.user, { displayName: signUpName.value.trim() });
+        await ensureUserProfile({ ...cred.user, displayName: signUpName.value.trim() });
+        await sendEmailVerification(cred.user);
+        authMessage.textContent = "Account created. Verification email sent.";
       } catch (error) {
-        authMessage.textContent = error.message;
+        authMessage.textContent = safeMessage(error);
       }
     });
 
     signInForm?.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       try {
-        await signInWithEmailAndPassword(
-          auth,
-          signInEmail.value.trim(),
-          signInPassword.value.trim()
-        );
-
+        await signInWithEmailAndPassword(auth, signInEmail.value.trim(), signInPassword.value.trim());
         authMessage.textContent = "Signed in successfully.";
       } catch (error) {
-        authMessage.textContent = error.message;
+        authMessage.textContent = safeMessage(error);
       }
     });
 
@@ -918,18 +772,11 @@
       if (user) {
         publicApp.classList.add("hidden");
         privateApp.classList.remove("hidden");
-
         try {
           const profile = await ensureUserProfile(user);
           const trades = await loadRecentTrades(user.uid);
-
-          if (window.applyCloudState) {
-            window.applyCloudState(profile, trades);
-          }
-
-          if (window.propguardRefreshUI) {
-            setTimeout(() => window.propguardRefreshUI(), 60);
-          }
+          if (window.applyCloudState) window.applyCloudState(profile, trades, user);
+          if (window.propguardRefreshUI) setTimeout(() => window.propguardRefreshUI(), 60);
         } catch (error) {
           console.error("Error loading PropGuard profile:", error);
         }
@@ -938,6 +785,10 @@
         publicApp.classList.remove("hidden");
       }
     });
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+    }
   </script>
 </body>
 </html>

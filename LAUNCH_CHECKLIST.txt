@@ -1,0 +1,22 @@
+PROP GUARD - FINAL LAUNCH CHECKLIST
+
+Already improved in this package:
+- Better auth UX with password reset and email verification prompt
+- Terms, privacy, risk disclaimer, and support modals
+- Advanced metrics, trade history table, CSV export, clear log
+- Trade notes and setup tags
+- Toast notifications instead of rough alert-only flows
+- PWA manifest and service worker support
+- Install prompt support
+- Chart hover tooltip
+- Verification banner and onboarding modal
+- Prop firm defaults for common setups
+
+Still required outside these files before public commercial launch:
+1. Publish your real support email and company contact details.
+2. Replace sample legal text with attorney-reviewed legal pages.
+3. Deploy Firestore security rules in Firebase using the sample file.
+4. Test sign-up, sign-in, reset password, export, and trade sync live in production.
+5. Verify your domain, favicon/icon sizes, and app store/marketplace copy.
+6. Add Stripe or your real billing flow if you plan to charge users.
+7. Confirm Firebase usage limits, backup plan, and privacy compliance.
